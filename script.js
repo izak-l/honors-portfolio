@@ -3,9 +3,17 @@ document.addEventListener('DOMContentLoaded', function () {
   const galleryContainer = document.getElementById('gallery-container');
   const imgFoldername = "img/gallery"
   
+  const column1 = document.createElement('div');
+  column1.className = "column";
+  const column2 = document.createElement('div');
+  column2.className = "column";
+  const column3 = document.createElement('div');
+  column3.className = "column";
+  
   // Fetch image filenames asynchronously
   fetchImageFilenames().then(filenames => {
     // Dynamically create image containers
+    const counter = 0
     filenames.forEach((filename, index) => {
       const imageContainer = document.createElement('div');
       imageContainer.className = 'image-container';
@@ -14,7 +22,18 @@ document.addEventListener('DOMContentLoaded', function () {
       img.src = imgFoldername + "/" + filename; 
       
       imageContainer.appendChild(img);
-      galleryContainer.appendChild(imageContainer);
+      // galleryContainer.appendChild(imageContainer);
+      if(index%3 == 0) {
+        column1.appendChild(imageContainer);
+      } else if(index%3 == 1) {
+        column2.appendChild(imageContainer);
+      } else if(index%3 == 2) {
+        column3.appendChild(imageContainer);
+      }
+      
+      galleryContainer.appendChild(column1);
+      galleryContainer.appendChild(column2);
+      galleryContainer.appendChild(column3);
       
       imageContainer.addEventListener('click', function () {
         openLightbox(index, filenames);

@@ -19,18 +19,18 @@ body {
 
 .gallery {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: space-around;
   margin: 0 auto;
 }
 
 .image-container {
   width: 100%;
-  margin: 15px;
+  margin: 6px;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  object-fit: cover;
+  /* object-fit: cover; */
 }
 
 img {
@@ -75,7 +75,7 @@ img {
   font-size: 24px;
   color: white;
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background for arrows */
-  padding: 10px;
+  padding: 6px;
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -99,23 +99,19 @@ img {
   margin: 0 auto;
 }
 
+.container {
+  padding: 40px 5%;
+}
+
 
 /* Media Queries */
 
 @media (min-width: 768px) {
-  .image-container {
-    width: calc(50% - 30px); /* two images per row on tablets */
+  .gallery {
+    flex-direction: row;
   }
   
-  /* desktop */
-  @media (min-width: 1200px) {
-    .image-container {
-      width: calc(33.33% - 30px); /* three images per row on desktop */
-    }
-    
-    .gallery {
-      width: 66%;
-    }
-    
+  .gallery .column {
+    padding: 4px;
   }
 }
