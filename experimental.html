@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden; /* Hide horizontal scrollbar */
+    }
+
+    .card-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow-x: hidden; /* Hide horizontal overflow */
+      position: relative;
+    }
+
+    .card {
+      width: 80%; /* Adjust the width of the cards as needed */
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .card img {
+      width: 100%;
+      display: block;
+    }
+
+    .card.peek-left,
+    .card.peek-right {
+      position: absolute;
+      width: 50%;
+      z-index: 0;
+      opacity: 0.8; /* Adjust the opacity as needed */
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .card.peek-left {
+      left: 0;
+      transform-origin: left center;
+      transform: translateX(-100%);
+    }
+
+    .card.peek-right {
+      right: 0;
+      transform-origin: right center;
+      transform: translateX(100%);
+    }
+
+    .gallery-container {
+      display: flex;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+    }
+
+    .image-container {
+      flex: 0 0 auto;
+      scroll-snap-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <div class="card">
+      <img src="img/DSC01499.jpg" alt="Prominent Image">
+    </div>
+    <div class="card peek-left">
+      <img src="img/DSC01580.jpg" alt="Peek Left Image">
+    </div>
+    <div class="card peek-right">
+      <img src="img/DSC01442.jpg" alt="Peek Right Image">
+    </div>
+  </div>
+
+  <div class="gallery-container">
+    <!-- Your gallery images go here -->
+    <div class="image-container"><img src="img/DSC01499.jpg" alt="Gallery Image 1"></div>
+    <div class="image-container"><img src="img/DSC01580.jpg" alt="Gallery Image 2"></div>
+    <div class="image-container"><img src="img/DSC01442.jpg" alt="Gallery Image 3"></div>
+    <!-- Add more image containers as needed -->
+  </div>
+
+  <script>
+    // Your JavaScript code for handling clicks and interactions goes here
+  </script>
+</body>
+</html>
