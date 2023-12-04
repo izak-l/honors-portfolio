@@ -1,7 +1,11 @@
+// automatically load gallery from github
 // automatically load gallery from img/ folder
+const isLocal = window.location.hostname === '127.0.0.1'
+
 document.addEventListener('DOMContentLoaded', function () {
+  console.log("HERE");
   const galleryContainer = document.getElementById('gallery-container');
-  const imgFoldername = "img/gallery"
+  const imgFoldername = "img"
   
   // img columns: https://codesandbox.io/p/sandbox/fast-sun-357ccd?file=%2Fstyle.css%3A14%2C1-16%2C2
   const column1 = document.createElement('div');
@@ -12,15 +16,16 @@ document.addEventListener('DOMContentLoaded', function () {
   column3.className = "column";
   
   // Fetch image filenames asynchronously
-  fetchImageFilenames().then(filenames => {
+  if(!isLocal) {
+  fetchImageUrls().then(urls => {
     // Dynamically create image containers
     const counter = 0
-    filenames.forEach((filename, index) => {
+    urls.forEach((url, index) => {
       const imageContainer = document.createElement('div');
       imageContainer.className = 'image-container';
       
       const img = document.createElement('img');
-      img.src = imgFoldername + "/" + filename; 
+      img.src = url
       
       imageContainer.appendChild(img);
       // galleryContainer.appendChild(imageContainer);
@@ -37,22 +42,66 @@ document.addEventListener('DOMContentLoaded', function () {
       galleryContainer.appendChild(column3);
       
       imageContainer.addEventListener('click', function () {
-        openLightbox(index, filenames);
+        openLightbox(index, urls);
       });
     });
   });
+} else {
+  // Fetch image filenames asynchronously
+  fetchImageFilenames().then(filenames => {
+    // Dynamically create image containers
+    const counter = 0
+    filenames.forEach((filename, index) => {
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'image-container';
+        
+        const img = document.createElement('img');
+        img.src = imgFoldername + "/gallery/" + filename; 
+        
+        imageContainer.appendChild(img);
+        // galleryContainer.appendChild(imageContainer);
+        if(index%3 == 0) {
+          column1.appendChild(imageContainer);
+        } else if(index%3 == 1) {
+          column2.appendChild(imageContainer);
+        } else if(index%3 == 2) {
+          column3.appendChild(imageContainer);
+        }
+        
+        galleryContainer.appendChild(column1);
+        galleryContainer.appendChild(column2);
+        galleryContainer.appendChild(column3);
+        
+        imageContainer.addEventListener('click', function () {
+          openLightbox(index, filenames);
+        });
+      });
+    });
+  }
   
-  // Function to fetch image filenames
-  async function fetchImageFilenames() {
-    const response = await fetch('img/gallery/');
-    const body = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(body, 'text/html');
-    const filenames = Array.from(doc.querySelectorAll('a'))
-      .map(link => link.getAttribute('href'))
-      .filter(href => href.endsWith('.jpg')); // Adjust file extensions as needed
-      
-      return filenames;
+// Function to fetch image filenames
+async function fetchImageFilenames() {
+  const response = await fetch('img/gallery/');
+  const body = await response.text();
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(body, 'text/html');
+  const filenames = Array.from(doc.querySelectorAll('a'))
+    .map(link => link.getAttribute('href'))
+    .filter(href => href.endsWith('.jpg')); // Adjust file extensions as needed
+    
+    return filenames;
+}
+  
+  async function fetchImageUrls() {
+    const endpoint = "https://api.github.com/repos/izak-l/honors-portfolio/contents/img/gallery"
+    try {
+      const response = await fetch(endpoint)
+      const data = await response.json();
+      return data.map(item => item.download_url).filter(url => url.endsWith('.jpg'));
+    } catch (error) {
+      console.error('Error fetching image URLs:', error);
+      return [];
+    }
   }
   
   // Function to open lightbox
@@ -80,13 +129,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add gallery navigation event handlers
     leftArrow.addEventListener('click', function (event) {
       event.stopPropagation();
-                console.log('left arrow clicked');
+                // console.log('left arrow clicked');
       navigate(-1, filenames);
     });
 
     rightArrow.addEventListener('click', function(event) {
       event.stopPropagation();
-                console.log('right arrow clicked');
+                // console.log('right arrow clicked');
       navigate(1, filenames);
 
     });
@@ -94,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Show/hide arrows based on gallery view
     lightbox.addEventListener('mouseenter', function () {
       arrowsContainer.style.opacity = 1;
-      console.log('show!')
+      // console.log('show!')
     });
     
     lightbox.addEventListener('mouseleave', function () {
@@ -102,7 +151,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
     const lightboxImg = document.createElement('img');
-    lightboxImg.src = 'img/gallery/' + filenames[index];
+    if(!isLocal) {
+      lightboxImg.src = filenames[index];
+    } else {
+      lightboxImg.src = "img/gallery/" + filenames[index];
+    }
     
     // handle mobile users swiping between pictures
     let touchStartX = 0;
@@ -132,7 +185,12 @@ document.addEventListener('DOMContentLoaded', function () {
   // Function to navigate between images
   function navigate(direction, filenames) {
     const lightbox = document.querySelector('.lightbox img');
-    const currentIndex = filenames.indexOf(lightbox.src.split('/').pop());
+    if(!isLocal) {
+      currentIndex = filenames.indexOf(lightbox.src);
+    } else {
+      currentIndex = filenames.indexOf(lightbox.src.split('/').pop());
+    }
+
     
     let newIndex = currentIndex + direction;
     
@@ -142,7 +200,11 @@ document.addEventListener('DOMContentLoaded', function () {
       newIndex = 0;
     }
     
-    lightbox.src = 'img/gallery/' + filenames[newIndex];
+    if(!isLocal) {
+      lightbox.src = filenames[newIndex];
+    } else {
+      lightbox.src = 'img/gallery/' + filenames[newIndex];
+    }
     console.log('lightbox src updated to: ' + lightbox.src);
   }
   
