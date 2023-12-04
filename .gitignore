@@ -2,7 +2,7 @@
 # FOLDER SPECIFIC RULES
 # --------------------------------------------------------
 experimental/
-img/
+#img/ #uncomment this to avoid image uploads
 
 # -----------------------------------------------------------------
 # .gitignore
