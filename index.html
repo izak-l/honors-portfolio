@@ -4,32 +4,76 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <link rel="preload" href="spotlight.bundle.js" as="script">
-    <script src="spotlight.bundle.js"></script>
     <title>UW Autumn 2023</title>
   </head>
   <body>
+    <!-- Header/Navbar -->
+    <div class="navbar">
+      <h1>Autumn 2023</h1>
+    </div>
+    
     <div class="gallery-link">
-      <p>Izak's Photo Gallery</p>
-      <a href="gallery.html">
-        <img id="gallery-link" src="img/gallery/DSC01442.jpg" alt="link to gallery"></img>
-      </a>
-      <p>Explination</p>
+      <div class="side-by-side">
+        <a href="gallery.html">
+          <img id="gallery-link-img" src="img/gallery/DSC01445.jpg" alt="link to gallery"></img>
+        </a>
+        <div class="flex-column">
+          <h2 class="photo-gallery-title center-text">My Photo Gallery</h2>
+          <p class="artifact-annotation">I got into photography in the summer of 2023, and for autumn quarter I decided to
+          create a space where I can place all of my favorite photos for me and other to view.
+          Photography and film are two nascent hobbies of mine that I look forward to continuously
+          developing during my time in university. Photography and film are unique mediums because
+          of how much information they convey without using any words. As I develop my technical and
+          creative skillsets further during my time at university, photos and videos will serve as
+          small snapshots across the years. Building this gallery was also a fun technical challenge 
+          and I look forward to improving it over time.</p>
+        </div>
     </div>
-    
-    
-    <div class="houses">
-      <p>Pax Property LLC</p>
-      <img id="pax-property-llc-photo" src="img/dadu.jpg"></img>
-      <img id="pax-property-llc-photo" src="img/main-house.jpg"></img>
-      <p>Explination</p>
     </div>
+    <!-- <div class="horizontal-divider"></div> -->
     
+    <div class="pax-property-llc-section">
+      <h2 class="center-text section-2-heading">Pax Property LLC</h2>
+      <div class="houses">
+        <div class="pax-column">
+          <a href="https://www.dannygrecohomeswa.com/search/details/3fu/0/" target="_blank" rel="noopener noreferrer">
+          <img class="pax-property-llc-photo" src="img/main_house.jpg"></img>
+          </a>
+          <div class="pricing-info">
+            <p class="pax-pricing price">$850,000</p>
+            <div class="vertical-divider"></div>
+            <div class="addressing">
+              <p class="pax-pricing address">7360 16th Ave NW,</p>
+              <p class="pax-pricing city">Seattle</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pax-column">
+          <a href="https://www.dannygrecohomeswa.com/search/details/3ft/0/" target="_blank" rel="noopener noreferrer">
+          <img class="pax-property-llc-photo" src="img/dadu.jpg"></img>
+          </a>
+          <div class="pricing-info">
+            <p class="pax-pricing price">$735,000</p>
+            <div class="vertical-divider"></div>
+            <div class="addressing">
+              <p class="pax-pricing address">1515 NW 75Th St,</p>
+              <p class="pax-pricing city">Seattle</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="artifact-annotation center-text">In August of 2022, I purchased the house
+      located at 7360 16th Ave NW after creating a business plan and raising investment
+      for my real estate development company: Pax Property LLC. One year later, 1515 NW 75th st
+      has completed construction and both homes are listed for sale. I learned an incredible
+      amount from this project and it has also reinforced my self-image dramatically. To bring this
+      from idea to reality I worked with teams of contractors, lawyers, investors, and friends and
+      the skills I've gained from this project will help me in all future endevors.</p>
+    </div>
     
     <div class="white-paper-protest-project">
       
     </div>
-    
-    <script src="script.js"></script>
   </body>
 </html>

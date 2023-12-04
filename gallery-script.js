@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const galleryContainer = document.getElementById('gallery-container');
   const imgFoldername = "img/gallery"
   
+  // img columns: https://codesandbox.io/p/sandbox/fast-sun-357ccd?file=%2Fstyle.css%3A14%2C1-16%2C2
   const column1 = document.createElement('div');
   column1.className = "column";
   const column2 = document.createElement('div');
