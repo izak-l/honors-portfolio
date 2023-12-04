@@ -1,109 +1,76 @@
-// automatically load gallery from github
-// automatically load gallery from img/ folder
-const isLocal = window.location.hostname === '127.0.0.1'
-
 document.addEventListener('DOMContentLoaded', function () {
-  console.log("HERE");
   const galleryContainer = document.getElementById('gallery-container');
-  const imgFoldername = "img"
+  const isLocal = window.location.hostname === '127.0.0.1';
+  const imgFoldername = isLocal ? 'img/gallery/' : '';
   
   // img columns: https://codesandbox.io/p/sandbox/fast-sun-357ccd?file=%2Fstyle.css%3A14%2C1-16%2C2
-  const column1 = document.createElement('div');
-  column1.className = "column";
-  const column2 = document.createElement('div');
-  column2.className = "column";
-  const column3 = document.createElement('div');
-  column3.className = "column";
+  const column1 = createColumn();
+  const column2 = createColumn();
+  const column3 = createColumn();
   
-  // Fetch image filenames asynchronously
-  if(!isLocal) {
-  fetchImageUrls().then(urls => {
-    // Dynamically create image containers
-    const counter = 0
-    urls.forEach((url, index) => {
-      const imageContainer = document.createElement('div');
-      imageContainer.className = 'image-container';
-      
-      const img = document.createElement('img');
-      img.src = url
-      
-      imageContainer.appendChild(img);
-      // galleryContainer.appendChild(imageContainer);
-      if(index%3 == 0) {
-        column1.appendChild(imageContainer);
-      } else if(index%3 == 1) {
-        column2.appendChild(imageContainer);
-      } else if(index%3 == 2) {
-        column3.appendChild(imageContainer);
-      }
-      
-      galleryContainer.appendChild(column1);
-      galleryContainer.appendChild(column2);
-      galleryContainer.appendChild(column3);
-      
-      imageContainer.addEventListener('click', function () {
-        openLightbox(index, urls);
-      });
-    });
-  });
-} else {
-  // Fetch image filenames asynchronously
-  fetchImageFilenames().then(filenames => {
-    // Dynamically create image containers
-    const counter = 0
-    filenames.forEach((filename, index) => {
-        const imageContainer = document.createElement('div');
-        imageContainer.className = 'image-container';
-        
-        const img = document.createElement('img');
-        img.src = imgFoldername + "/gallery/" + filename; 
-        
-        imageContainer.appendChild(img);
-        // galleryContainer.appendChild(imageContainer);
-        if(index%3 == 0) {
-          column1.appendChild(imageContainer);
-        } else if(index%3 == 1) {
-          column2.appendChild(imageContainer);
-        } else if(index%3 == 2) {
-          column3.appendChild(imageContainer);
-        }
-        
-        galleryContainer.appendChild(column1);
-        galleryContainer.appendChild(column2);
-        galleryContainer.appendChild(column3);
-        
-        imageContainer.addEventListener('click', function () {
-          openLightbox(index, filenames);
-        });
-      });
-    });
-  }
+  const fetchFunction = isLocal ? fetchImageFilenames : fetchImageUrls;
+  console.log(fetchFunction);
   
-// Function to fetch image filenames
-async function fetchImageFilenames() {
-  const response = await fetch('img/gallery/');
-  const body = await response.text();
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(body, 'text/html');
-  const filenames = Array.from(doc.querySelectorAll('a'))
-    .map(link => link.getAttribute('href'))
-    .filter(href => href.endsWith('.jpg')); // Adjust file extensions as needed
+  fetchFunction().then(data => {
+    const items = data;
+    items.forEach((item, index) => {
+      const imageContainer = createImageContainer(item);
+      appendImageContainerToColumn(imageContainer, index % 3 === 0 ? column1 : (index % 3 === 1 ? column2 : column3));
+      imageContainer.addEventListener('click', () => openLightbox(index, items));
+    });
     
-    return filenames;
-}
+    appendColumnsToGalleryContainer(column1, column2, column3);
+  });
   
-  async function fetchImageUrls() {
-    const endpoint = "https://api.github.com/repos/izak-l/honors-portfolio/contents/img/gallery"
-    try {
-      const response = await fetch(endpoint)
-      const data = await response.json();
-      return data.map(item => item.download_url).filter(url => url.endsWith('.jpg'));
-    } catch (error) {
-      console.error('Error fetching image URLs:', error);
-      return [];
-    }
+  async function fetchImageFilenames() {
+    const response = await fetch('img/gallery/');
+    const body = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(body, 'text/html');
+    return Array.from(doc.querySelectorAll('a'))
+      .map(link => link.getAttribute('href'))
+      .filter(href => href.endsWith('.jpg'));
   }
-  
+    
+   async function fetchImageUrls() {
+     const endpoint = 'https://api.github.com/repos/izak-l/honors-portfolio/contents/img/gallery';
+     try {
+       const response = await fetch(endpoint);
+       const data = await response.json();
+       return data.map(item => item.download_url).filter(url => url.endsWith('.jpg'));
+     } catch (error) {
+       console.error('Error fetching data:', error);
+       return [];
+     }
+   }
+
+   function createColumn() {
+     const column = document.createElement('div');
+     column.className = 'column';
+     return column;
+   }
+
+   function createImageContainer(item) {
+     const imageContainer = document.createElement('div');
+     imageContainer.className = 'image-container';
+
+     const img = document.createElement('img');
+     img.src = imgFoldername + item;
+
+     imageContainer.appendChild(img);
+     return imageContainer;
+   }
+
+   function appendImageContainerToColumn(imageContainer, column) {
+     column.appendChild(imageContainer);
+   }
+
+   function appendColumnsToGalleryContainer(column1, column2, column3) {
+     galleryContainer.appendChild(column1);
+     galleryContainer.appendChild(column2);
+     galleryContainer.appendChild(column3);
+   }
+    
   // Function to open lightbox
   function openLightbox(index, filenames) {    
     const lightbox = document.createElement('div');
@@ -129,15 +96,12 @@ async function fetchImageFilenames() {
     // Add gallery navigation event handlers
     leftArrow.addEventListener('click', function (event) {
       event.stopPropagation();
-                // console.log('left arrow clicked');
       navigate(-1, filenames);
     });
 
     rightArrow.addEventListener('click', function(event) {
       event.stopPropagation();
-                // console.log('right arrow clicked');
       navigate(1, filenames);
-
     });
     
     // Show/hide arrows based on gallery view
@@ -205,7 +169,6 @@ async function fetchImageFilenames() {
     } else {
       lightbox.src = 'img/gallery/' + filenames[newIndex];
     }
-    console.log('lightbox src updated to: ' + lightbox.src);
   }
   
   function handleSwipe() {
