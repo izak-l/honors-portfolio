@@ -10,7 +10,6 @@ body {
   max-height: 1000px;
   overflow: hidden;
   display: flex;
-  /* align-items: flex-end; /* Align the items to the bottom of the container */ */
 }
 
 .hero-text {
@@ -65,7 +64,7 @@ body {
 
 .quarter-box.inactive {
   background-color: #ddd;
-  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .quarter-box.inactive:hover {
